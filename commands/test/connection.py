@@ -1,5 +1,5 @@
 from lib.command import BaseCommand
-from bootstrap.connect_to_db import DatabaseContext
+from lib.connect_to_db import DatabaseContext
 from sqlalchemy import text
 
 class Command(BaseCommand, DatabaseContext):

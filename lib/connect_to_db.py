@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, scoped_session
-from bootstrap.env import Env
+from lib.env import Env
 from sqlalchemy.engine.cursor import CursorResult
 
 class DatabaseManager:

@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from bootstrap.connect_to_db import DatabaseContext
+from lib.connect_to_db import DatabaseContext
 
 class BaseModel(DatabaseContext) :
 
