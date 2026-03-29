@@ -9,5 +9,6 @@ class Command(BaseCommand, DatabaseContext):
         pass
 
     def run(self) -> bool:
-        self.exec_query("INSERT INTO users (id, name, email, password) VALUES (1, 'John Doe', 'john@example.com', 'password');")
+        response = self.exec_query("SELECT * FROM users;", fetch=False)
+        print(response.one())
         return True

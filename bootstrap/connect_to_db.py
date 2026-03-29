@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, scoped_session
 from bootstrap.env import Env
+from sqlalchemy.engine.cursor import CursorResult
 
 class DatabaseManager:
     _engine = None
@@ -49,9 +50,11 @@ class DatabaseContext:
         finally :
             self.db.close()
 
-    def exec_query(self, query : str):
+    def exec_query(self, query : str, fetch : bool = False) -> CursorResult | list:
         with self as db_session :
             response = db_session.execute(text(query))
+            if fetch :
+                return response.fetchall()
             return response
         
         return None
