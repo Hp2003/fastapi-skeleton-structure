@@ -4,6 +4,7 @@ from lib.database.connect_to_db import DatabaseContext
 from sqlalchemy.orm import mapped_column as alchemy_mapped_column
 from sqlalchemy import String
 from sqlalchemy import select
+from sqlalchemy.dialects import postgresql
 
 def mapped_column(*args, **kwargs) :
     return alchemy_mapped_column(*args, **kwargs)
@@ -13,14 +14,16 @@ class Mapped(AlchemyMapped):
 
 class Base(DeclarativeBase, DatabaseContext):
 
-    def __del__(self) :
-        # self.db.close()
-        pass
-        
     def find(self, id : int) :
         stmt = select(User).where(User.id == id)
-        self.__qs = self.exec_query(stmt, fetch=True)
-        return self.__qs.scalar()
+        compiled = stmt.compile(
+            dialect=postgresql.dialect(),
+            compile_kwargs={"literal_binds": True}
+        )
+        self.__qs = str(compiled)
+        response = self.exec_query(self.__qs, id)
+        
+        return response.first()
 
 class User(Base) :
     __tablename__ = "users"

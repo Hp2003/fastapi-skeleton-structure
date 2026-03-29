@@ -7,6 +7,7 @@ import commands
 import os
 import inspect
 from lib.comamnds.command import BaseCommand
+from lib.orm.basemodel import User
 
 app = FastAPI()
 
@@ -14,7 +15,10 @@ command_line = typer.Typer()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    user = User()
+    user = user.find(1)
+
+    return {"name": user.name}
 
 def register(cmd_cls, namespace):
     sig = inspect.signature(cmd_cls.__init__)
@@ -42,6 +46,7 @@ def register(cmd_cls, namespace):
 
     _run.__signature__ = new_sig
     command_line.command(name=f"{namespace}:{cmd_cls.command}")(_run)
+
 
 if __name__ == "__main__":
 

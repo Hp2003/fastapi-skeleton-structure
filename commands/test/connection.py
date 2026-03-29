@@ -1,5 +1,6 @@
 from lib.comamnds.command import BaseCommand
 from lib.orm.basemodel import User
+import time
 
 class Command(BaseCommand):
     command = "connection"
@@ -8,12 +9,9 @@ class Command(BaseCommand):
         pass
 
     def run(self) -> bool:
-        user = User()
-        user_mike = User() 
-
-        user = user.find(2)
-        print(user.name)
-        user_mike=user_mike.find(1)
-        print(user_mike.name)
-
+        while True :
+            user = User()
+            user = user.find(1)
+            print(user.name)
+            time.sleep(5)
         return True

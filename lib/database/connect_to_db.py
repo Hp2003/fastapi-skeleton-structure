@@ -65,20 +65,20 @@ class DatabaseContext:
             else:
                 self.db.commit()
         finally :
-            # self.db.close()
-            pass
-
+            print('Connection killed!')
+            self.db.close()
+        
     def exec_query(self, query : str, fetch : bool = False) -> ChunkedIteratorResult | list:
         with self as db_session :
-            # if type(query) == str :
-            #     response = db_session.execute(text(query))
-            # else:
-            #     response = db_session.execute(query)
+            if type(query) == str :
+                response = db_session.execute(text(query))
+            else:
+                response = db_session.execute(query)
 
-            # if fetch :
-            #     return QueryResult(response.fetchall(), response.rowcount)
-            # return QueryResult(response.fetchall(), response.rowcount)
-            return db_session.execute(query)
+            if fetch :
+                return QueryResult(response.fetchall(), response.rowcount)
+            return QueryResult(response.fetchall(), response.rowcount)
+            # return db_session.execute(query)
         return None
 
 class ConnectionParser :
