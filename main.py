@@ -6,10 +6,7 @@ import importlib
 import commands
 import os
 import inspect
-from functools import wraps
-from lib.command import BaseCommand
-from lib.database import BaseModel
-from sqlalchemy import text
+from lib.comamnds.command import BaseCommand
 
 app = FastAPI()
 

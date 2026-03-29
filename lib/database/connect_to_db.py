@@ -1,7 +1,20 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, scoped_session
-from lib.env import Env
+from lib.core.env import Env
 from sqlalchemy.engine.cursor import CursorResult
+from sqlalchemy.engine.result import ChunkedIteratorResult
+
+class QueryResult:
+    def __init__(self, data: list, rowcount: int):
+        # We store the ALREADY fetched data, not the live cursor
+        self._data = data
+        self.rowcount = rowcount
+
+    def first(self):
+        return self._data[0] if self._data else None
+
+    def all(self):
+        return self._data
 
 class DatabaseManager:
     _engine = None
@@ -10,6 +23,7 @@ class DatabaseManager:
     @classmethod
     def get_session_factory(cls):
         if cls._engine is None:
+            print("Connection established!")
             # Build connection string ONCE
             connection_type = Env.get('DB_CONNECTION')
             parser = ConnectionParser(
@@ -35,6 +49,9 @@ class DatabaseManager:
 
 class DatabaseContext:
 
+    def __init__(self) :
+        self.db = None
+
     def __enter__(self):
         # Grab the existing shared factory
         session_factory = DatabaseManager.get_session_factory()
@@ -48,15 +65,20 @@ class DatabaseContext:
             else:
                 self.db.commit()
         finally :
-            self.db.close()
+            # self.db.close()
+            pass
 
-    def exec_query(self, query : str, fetch : bool = False) -> CursorResult | list:
+    def exec_query(self, query : str, fetch : bool = False) -> ChunkedIteratorResult | list:
         with self as db_session :
-            response = db_session.execute(text(query))
-            if fetch :
-                return response.fetchall()
-            return response
-        
+            # if type(query) == str :
+            #     response = db_session.execute(text(query))
+            # else:
+            #     response = db_session.execute(query)
+
+            # if fetch :
+            #     return QueryResult(response.fetchall(), response.rowcount)
+            # return QueryResult(response.fetchall(), response.rowcount)
+            return db_session.execute(query)
         return None
 
 class ConnectionParser :

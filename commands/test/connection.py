@@ -1,14 +1,19 @@
-from lib.command import BaseCommand
-from lib.connect_to_db import DatabaseContext
-from sqlalchemy import text
+from lib.comamnds.command import BaseCommand
+from lib.orm.basemodel import User
 
-class Command(BaseCommand, DatabaseContext):
+class Command(BaseCommand):
     command = "connection"
 
     def __init__(self) :
         pass
 
     def run(self) -> bool:
-        response = self.exec_query("SELECT * FROM users;", fetch=False)
-        print(response.one())
+        user = User()
+        user_mike = User() 
+
+        user = user.find(2)
+        print(user.name)
+        user_mike=user_mike.find(1)
+        print(user_mike.name)
+
         return True
