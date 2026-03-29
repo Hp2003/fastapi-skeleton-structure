@@ -9,5 +9,5 @@ class BaseCommand(ABC):
             self.metadata = kwargs
 
     @abstractmethod
-    def run(self):
+    def run(self) -> bool:
         pass

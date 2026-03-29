@@ -8,6 +8,8 @@ import os
 import inspect
 from functools import wraps
 from lib.command import BaseCommand
+from lib.database import BaseModel
+from sqlalchemy import text
 
 app = FastAPI()
 
@@ -17,7 +19,7 @@ command_line = typer.Typer()
 def read_root():
     return {"Hello": "World"}
 
-def register(cmd_cls, namespace="app"):
+def register(cmd_cls, namespace):
     sig = inspect.signature(cmd_cls.__init__)
     new_params = []
 
